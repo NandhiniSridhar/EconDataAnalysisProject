@@ -121,7 +121,14 @@ predict(lasso_model, type = "coefficients", s = best_lambda)[1:27, ] #change to 
 best_model <- glmnet(pred[train,], resp[train], alpha=1, lambda=best_lambda_lasso)
 pred5 <- predict(best_model, s = best_lambda_lasso, newx = as.matrix(reviews_numerical_test))
 print(pred5)
-write(pred5, file = 'LASSO_output.txt')
+
+#threshold prediction values into binary classifier we want
+#use threshold of 0.5
+lasso_preds = ifelse(pred5 > 0.5, 1, 0)
+
+table(lasso_preds, rec_test)
+(753 + 3625) / (753 + 272 + 48 + 3625)
+write(lasso_preds, file = 'LASSO_output.txt')
 mse5 <- mean((rec_numerical_test - pred5) ** 5)
 mse5
 
